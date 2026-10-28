@@ -1,24 +1,40 @@
-# Ambiente virtual
+# Ambientes virtuais
 .venv/
+venv/
+ENV/
+env/
 
-# Cache do Python
+# Arquivos compilados do Python e cache
 __pycache__/
-*.pyc
+*.py[cod]
+*$py.class
+*.so
 
-# Banco de dados local
-db.sqlite3
-db.sqlite3-journal
+# Banco de dados local (SQLite)
+*.sqlite3
+*.sqlite3-journal
 
-# Variáveis de ambiente (senhas, chaves)
+# Arquivos de configuração de ambiente e segredos
 .env
+.env.*
+local_settings.py
 
-# Arquivos gerados pelo Django
-media/
-staticfiles/
-
-# Logs
+# Arquivos de log
 *.log
 
-# Editores
+# Arquivos estáticos e mídias gerados localmente
+/staticfiles/
+/media/
+
+# IDEs e editores de texto
 .vscode/
 .idea/
+*.swp
+*.swo
+.DS_Store
+
+# Arquivos de teste e cobertura de código
+.coverage
+htmlcov/
+.pytest_cache/
+.mypy_cache/
