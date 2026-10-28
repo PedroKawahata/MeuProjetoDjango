@@ -23,4 +23,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('courses.urls')),
     path('', include('people.urls')),
+    path('accounts/', include('accounts.urls')), # 👈 Nova rota de contas
 ]

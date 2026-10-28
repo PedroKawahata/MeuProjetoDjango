@@ -1,8 +1,8 @@
-from django.shortcuts import render
+from django.contrib.auth.mixins import LoginRequiredMixin # Importa a "Segurança de catraca" direto do Django para classes de visualização
 from django.views.generic import ListView
-from courses.models import Course, Person  # Certifique-se de que o modelo Person realmente vive em courses.models
+from courses.models import Person
 
-class PersonListView(ListView):
+class PersonListView(LoginRequiredMixin, ListView):
     model = Person
     template_name = "person/list_view.html"
     context_object_name = "people"

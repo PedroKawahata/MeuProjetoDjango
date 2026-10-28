@@ -38,7 +38,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'courses',
+    'courses', # 👈 Nova aplicação para gerenciamento de cursos
+    'people', # 👈 Nova aplicação para gerenciamento de pessoas
+    'accounts',  # 👈 Nova aplicação de contas
 ]
 
 MIDDLEWARE = [
@@ -268,3 +270,7 @@ JAZZMIN_SETTINGS = {
     # Add a language dropdown into the admin
     "language_chooser": False,
 }
+
+LOGIN_URL = 'accounts:login'
+LOGIN_REDIRECT_URL = 'people:person-list'
+LOGOUT_REDIRECT_URL = 'accounts:login'
