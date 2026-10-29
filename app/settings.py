@@ -39,8 +39,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'courses', # 👈 Nova aplicação para gerenciamento de cursos
-    'people', # 👈 Nova aplicação para gerenciamento de pessoas
-    'accounts',  # 👈 Nova aplicação de contas
 ]
 
 MIDDLEWARE = [
@@ -58,7 +56,7 @@ ROOT_URLCONF = 'app.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / 'templates'],  # 👈 Diretório para templates globais
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -118,7 +116,11 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/6.1/howto/static-files/
 
+import os
+
 STATIC_URL = 'static/'
+MEDIA_URL = '/media/'
+MEDIA_ROOT =  BASE_DIR / 'media'
 
 
 # Email
@@ -271,6 +273,6 @@ JAZZMIN_SETTINGS = {
     "language_chooser": False,
 }
 
-LOGIN_URL = 'accounts:login'
-LOGIN_REDIRECT_URL = 'people:person-list'
-LOGOUT_REDIRECT_URL = 'accounts:login'
+#LOGIN_URL = 'accounts:login'
+#LOGIN_REDIRECT_URL = 'people:person-list'
+#LOGOUT_REDIRECT_URL = 'accounts:login'

@@ -36,6 +36,10 @@ class Course(models.Model):
         verbose_name="Professor",
     )
 
+    capa = models.ImageField(upload_to='capas/', null=True, blank=True) # 👈 upload_to define a subpasta dentro de media/
+
+    material = models.FileField(upload_to='materials/', null=True, blank=True)
+
     class Meta:
         verbose_name = "Curso"
         verbose_name_plural = "Cursos"
@@ -43,3 +47,11 @@ class Course(models.Model):
 
     def __str__(self):
         return self.name
+
+material = models.FileField(
+    upload_to="courses/materials/",
+)
+
+image = models.ImageField(
+    upload_to="courses/images/",
+)
