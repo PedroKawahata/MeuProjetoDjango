@@ -1,5 +1,5 @@
 
-                    # Taregran
+# Taregran
 
 ![Logo do Taregran](docs/imagens/logo.png)
 
