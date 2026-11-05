@@ -5,9 +5,11 @@
 {% block content %}
     <h1>Mural do Taregran</h1>
 
+    <a href="{% url 'community:create' %}">Nova publicação</a>
+
     {% for post in posts %}
         <article>
-            <h2>{{ post.title }}</h2>
+            <h2><a href="{% url 'community:detail' post.pk %}">{{ post.title }}</a></h2>
             <p>{{ post.get_category_display }} · {{ post.author.username }}</p>
             <p>{{ post.content|truncatewords:25 }}</p>
         </article>

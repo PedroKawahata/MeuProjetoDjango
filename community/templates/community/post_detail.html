@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+
+{% block title %}{{ post.title }}{% endblock %}
+
+{% block content %}
+    <a href="{% url 'community:feed' %}">Voltar ao mural</a>
+    <h1>{{ post.title }}</h1>
+    <p>{{ post.get_category_display }} · {{ post.author.username }}</p>
+    {{ post.content|linebreaks }}
+{% endblock %}
