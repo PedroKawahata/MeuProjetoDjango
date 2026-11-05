@@ -53,6 +53,15 @@ button:hover, .primary:hover { background: #f3e4d0; color: #101b29; }
   display: grid; align-content: center; gap: 1.5rem; padding: clamp(2rem, 6vw, 6rem);
   background: radial-gradient(ellipse at 28% 30%, #192d41, transparent 65%), var(--bg);
 }
+
+.brand-logo {
+    width: 40px;
+    height: 40px;
+    flex-shrink: 0;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
 .login-intro h1 { max-width: 13ch; }
 .login-intro h1 em { color: var(--sand); font-style: normal; }
 .login-intro p:not(.eyebrow) { max-width: 43ch; color: var(--muted); }
