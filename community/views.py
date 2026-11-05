@@ -6,7 +6,7 @@ from django.views.generic import CreateView, DeleteView, ListView, UpdateView
 from django.core.exceptions import PermissionDenied
 from django.db import transaction
 from django.views.decorators.http import require_POST
-from django.db.models import Q
+from django.db.models import Count, Q
 
 from .forms import AnswerForm, PostForm
 from .models import Post,  Answer
@@ -36,7 +36,7 @@ class FeedView(LoginRequiredMixin, ListView):
     context_object_name = "posts"
     paginate_by = 10
     def get_queryset(self):
-        posts = Post.objects.select_related("author").order_by("-created_at", "-pk")
+        posts = Post.objects.select_related("author").annotate(answer_count=Count("answers")).order_by("-created_at", "-pk")
         search_term = self.request.GET.get("q", "").strip()
         selected_category = self.request.GET.get("category", "")
 
@@ -50,6 +50,10 @@ class FeedView(LoginRequiredMixin, ListView):
         if selected_category in dict(Post.CATEGORY_CHOICES):
             posts = posts.filter(category=selected_category)
 
+        subject = self.request.GET.get("subject", "")
+        if subject in dict(Post.SUBJECT_CHOICES):
+            posts = posts.filter(subject=subject)
+
         return posts
 
     def get_context_data(self, **kwargs):
@@ -57,6 +61,10 @@ class FeedView(LoginRequiredMixin, ListView):
         context["categories"] = Post.CATEGORY_CHOICES
         context["search_term"] = self.request.GET.get("q", "").strip()
         context["selected_category"] = self.request.GET.get("category", "")
+        context["subjects"] = Post.SUBJECT_CHOICES
+        subject = self.request.GET.get("subject", "")
+        context["selected_subject"] = subject if subject in dict(Post.SUBJECT_CHOICES) else ""
+        context["subject_title"] = dict(Post.SUBJECT_CHOICES).get(subject, "Mural dos alunos")
         return context
 
 
@@ -91,6 +99,13 @@ class PostCreateView(LoginRequiredMixin, CreateView):
     model = Post
     form_class = PostForm
     template_name = "community/post_form.html"
+
+    def get_initial(self):
+        initial = super().get_initial()
+        subject = self.request.GET.get("subject", "")
+        if subject in dict(Post.SUBJECT_CHOICES):
+            initial["subject"] = subject
+        return initial
 
     def form_valid(self, form):
         form.instance.author = self.request.user

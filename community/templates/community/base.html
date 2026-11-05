@@ -1,0 +1,30 @@
+{% load static %}
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Taregran{% endblock %}</title>
+  <link rel="stylesheet" href="{% static 'community/theme.css' %}">
+</head>
+<body>
+  {% block header %}
+  <header class="topbar">
+    <a class="brand" href="{% url 'community:feed' %}"><span class="monogram" aria-hidden="true">T</span> Taregran</a>
+    <div class="top-actions">
+      {% if user.is_authenticated %}
+        <span class="username">{{ user.get_username }}</span>
+        <form method="post" action="{% url 'accounts:logout' %}">{% csrf_token %}<button class="secondary" type="submit">Sair</button></form>
+      {% else %}
+        <a href="{% url 'accounts:login' %}">Entrar</a>
+      {% endif %}
+    </div>
+  </header>
+  {% endblock %}
+  {% block layout %}
+  <main class="page">
+    {% block content %}{% endblock %}
+  </main>
+  {% endblock %}
+</body>
+</html>

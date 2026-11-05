@@ -1,13 +1,33 @@
-{% extends "base.html" %}
-
-{% block title %}Entrar{% endblock %}
-
-{% block content %}
-    <h1>Entrar</h1>
-    <form method="post">
+{% extends "community/base.html" %}
+{% load static %}
+{% block title %}Entrar · Taregran{% endblock %}
+{% block header %}{% endblock %}
+{% block layout %}
+<main class="login-layout">
+  <section class="login-intro" aria-labelledby="intro-title">
+    <p class="eyebrow">Taregran / Comunidade acadêmica</p>
+    <div>
+      <h1 id="intro-title">Aprender fica melhor <em>em comunidade.</em></h1>
+      <p>Um espaço para os alunos trocarem ideias, tirarem dúvidas e se ajudarem ao longo do semestre.</p>
+    </div>
+    <img src="{% static 'community/taregran-logo.webp' %}" alt="Símbolo do Taregran: capelo, livro e setas">
+  </section>
+  <section class="login-panel" aria-labelledby="login-title">
+    <div class="login-card">
+      <p class="eyebrow">Área do aluno</p>
+      <h2 id="login-title">Entrar no Taregran</h2>
+      <p class="muted">Acesse o mural e continue aprendendo com seus colegas.</p>
+      <form method="post" action="{% url 'accounts:login' %}" class="stack">
         {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit" class="btn btn-primary">Entrar</button>
-    </form>
-    <a href="{% url 'accounts:register' %}" class="btn btn-outline-secondary">Criar conta</a>
+        {{ form.non_field_errors }}
+        {% for field in form %}
+          <div class="field">{{ field.label_tag }}{{ field }}{{ field.errors }}</div>
+        {% endfor %}
+        {% if next %}<input type="hidden" name="next" value="{{ next }}">{% endif %}
+        <button class="primary" type="submit">Entrar</button>
+      </form>
+      <p class="signup">Primeira vez aqui? <a href="{% url 'accounts:register' %}">Criar conta</a></p>
+    </div>
+  </section>
+</main>
 {% endblock %}

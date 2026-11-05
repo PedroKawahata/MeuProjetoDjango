@@ -10,6 +10,19 @@ class Post(models.Model):
         ("material", "Material de estudo"),
     ]
 
+    SUBJECT_CHOICES = [
+        ("matematica", "Matemática Discreta"),
+        ("estatistica", "Probabilidade e Estatística"),
+        ("poo", "Programação Orientada a Objetos"),
+        ("web", "Desenvolvimento Web"),
+        ("banco", "Banco de Dados I"),
+        ("estudo", "Estudo Autônomo"),
+        
+    ]
+
+    subject = models.CharField(
+        "Matéria", max_length=24, choices=SUBJECT_CHOICES, blank=True, default=""
+    )
     title = models.CharField("Título", max_length=150)
     content = models.TextField("Descrição")
     category = models.CharField("Categoria", max_length=20, choices=CATEGORY_CHOICES)
