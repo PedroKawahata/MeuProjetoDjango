@@ -6,6 +6,7 @@ from django.views.generic import CreateView, DeleteView, ListView, UpdateView
 from django.core.exceptions import PermissionDenied
 from django.db import transaction
 from django.views.decorators.http import require_POST
+from django.db.models import Q
 
 from .forms import AnswerForm, PostForm
 from .models import Post,  Answer
@@ -34,6 +35,29 @@ class FeedView(LoginRequiredMixin, ListView):
     template_name = "community/feed.html"
     context_object_name = "posts"
     paginate_by = 10
+    def get_queryset(self):
+        posts = Post.objects.select_related("author").order_by("-created_at", "-pk")
+        search_term = self.request.GET.get("q", "").strip()
+        selected_category = self.request.GET.get("category", "")
+
+        if search_term:
+            posts = posts.filter(
+                Q(title__icontains=search_term)
+                | Q(content__icontains=search_term)
+                | Q(author__username__icontains=search_term)
+            )
+
+        if selected_category in dict(Post.CATEGORY_CHOICES):
+            posts = posts.filter(category=selected_category)
+
+        return posts
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["categories"] = Post.CATEGORY_CHOICES
+        context["search_term"] = self.request.GET.get("q", "").strip()
+        context["selected_category"] = self.request.GET.get("category", "")
+        return context
 
 
 @login_required
