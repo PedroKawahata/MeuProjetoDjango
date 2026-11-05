@@ -1,7 +1,7 @@
 
 # Taregran
 
-![Logo do Taregran](docs/imagens/logo.png)
+![Logo do Taregran](docs/imagens/logo_taregran.png)
 
 O Taregran é uma aplicação acadêmica desenvolvida com Django para aproximar estudantes. Os usuários podem publicar dúvidas, atividades, conteúdos e materiais de estudo, responder às publicações de colegas e marcar uma resposta como solução.
 Funcionalidades
