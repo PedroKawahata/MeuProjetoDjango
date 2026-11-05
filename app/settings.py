@@ -39,7 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'courses', # 👈 Nova aplicação para gerenciamento de cursos
-    'accounts'
+    'accounts',
+    'community',
 ]
 
 MIDDLEWARE = [
