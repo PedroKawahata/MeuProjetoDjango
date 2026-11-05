@@ -10,7 +10,16 @@
 <body>
   {% block header %}
   <header class="topbar">
-    <a class="brand" href="{% url 'community:feed' %}"><span class="monogram" aria-hidden="true">T</span> Taregran</a>
+   <a class="brand" href="{% url 'community:feed' %}">
+    <img
+        class="brand-logo"
+        src="{% static 'community/taregran-logo.webp' %}"
+        alt=""
+        width="40"
+        height="40"
+    >
+    Taregran
+</a>
     <div class="top-actions">
       {% if user.is_authenticated %}
         <span class="username">{{ user.get_username }}</span>
