@@ -7,4 +7,9 @@
     <h1>{{ post.title }}</h1>
     <p>{{ post.get_category_display }} · {{ post.author.username }}</p>
     {{ post.content|linebreaks }}
+
+    {% if post.author == user %}
+    <a href="{% url 'community:edit' post.pk %}">Editar</a>
+    <a href="{% url 'community:delete' post.pk %}">Excluir</a>
+{% endif %}
 {% endblock %}
