@@ -3,9 +3,30 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse, reverse_lazy
 from django.views.generic import CreateView, DeleteView, ListView, UpdateView
+from django.core.exceptions import PermissionDenied
+from django.db import transaction
+from django.views.decorators.http import require_POST
 
 from .forms import AnswerForm, PostForm
-from .models import Post
+from .models import Post,  Answer
+
+@login_required
+@require_POST
+@transaction.atomic
+def mark_solution(request, answer_id):
+    answer = get_object_or_404(Answer, pk=answer_id)
+    post = get_object_or_404(Post.objects.select_for_update(), pk=answer.post_id)
+
+    if post.author_id != request.user.pk:
+        raise PermissionDenied
+
+    post.answers.filter(is_solution=True).update(is_solution=False)
+    post.answers.filter(pk=answer.pk).update(is_solution=True)
+
+    post.is_resolved = True
+    post.save(update_fields=["is_resolved", "updated_at"])
+
+    return redirect("community:detail", pk=post.pk)
 
 
 class FeedView(LoginRequiredMixin, ListView):

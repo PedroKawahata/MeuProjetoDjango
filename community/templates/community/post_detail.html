@@ -5,6 +5,13 @@
 {% block content %}
     <a href="{% url 'community:feed' %}">Voltar ao mural</a>
     <h1>{{ post.title }}</h1>
+
+    {% if post.is_resolved %}
+    <p>Resolvida</p>
+{% else %}
+    <p>Em aberto</p>
+{% endif %}
+
     <p>{{ post.get_category_display }} · {{ post.author.username }}</p>
     {{ post.content|linebreaks }}
 
@@ -19,6 +26,16 @@
     <article>
         <strong>{{ answer.author.username }}</strong>
         {{ answer.content|linebreaks }}
+
+        {% if answer.is_solution %}
+    <strong>Melhor resposta</strong>
+{% elif post.author == user %}
+    <form method="post" action="{% url 'community:mark_solution' answer.pk %}">
+        {% csrf_token %}
+        <button type="submit">Marcar como melhor resposta</button>
+    </form>
+{% endif %}
+
     </article>
 {% empty %}
     <p>Ainda não há respostas.</p>
