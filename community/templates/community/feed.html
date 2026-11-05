@@ -1,48 +1,67 @@
-{% extends "base.html" %}
+{% extends "community/base.html" %}
+{% block title %}{{ subject_title }} · Taregran{% endblock %}
+{% block layout %}
+<div class="workspace">
+  <aside class="subjects">
+    <nav aria-label="Matérias">
+      <p class="eyebrow">Sala de estudos</p>
+      <a class="subject-link{% if not selected_subject %} active{% endif %}" href="{% url 'community:feed' %}"{% if not selected_subject %} aria-current="page"{% endif %}><span class="subject-icon" aria-hidden="true">⌂</span> Mural geral</a>
+      <p class="eyebrow subject-heading">Matérias</p>
+      {% for code, label in subjects %}
+        <a class="subject-link{% if code == selected_subject %} active{% endif %}" href="?subject={{ code|urlencode }}"{% if code == selected_subject %} aria-current="page"{% endif %}><span class="subject-icon" aria-hidden="true">{{ label|slice:":1" }}</span>{{ label }}</a>
+      {% endfor %}
+    </nav>
+  </aside>
 
-{% block title %}Mural do Taregran{% endblock %}
+  <main class="feed">
+    <section class="banner">
+      <p class="eyebrow">Taregran / Comunidade acadêmica</p>
+      <h1>{{ subject_title }}</h1>
+      <p>Compartilhe dúvidas, atividades e materiais com seus colegas.</p>
+      <a class="primary" href="{% url 'community:create' %}{% if selected_subject %}?subject={{ selected_subject|urlencode }}{% endif %}">＋ Nova publicação</a>
+    </section>
 
-{% block content %}
-    <h1>Mural do Taregran</h1>
+    <form class="filters" method="get" aria-label="Filtrar publicações">
+      {% if selected_subject %}<input type="hidden" name="subject" value="{{ selected_subject }}">{% endif %}
+      <label for="search">Buscar<input id="search" type="search" name="q" value="{{ search_term }}" placeholder="Título, assunto ou autor"></label>
+      <label for="category">Categoria
+        <select id="category" name="category">
+          <option value="">Todas</option>
+          {% for code, label in categories %}
+            <option value="{{ code }}"{% if code == selected_category %} selected{% endif %}>{{ label }}</option>
+          {% endfor %}
+        </select>
+      </label>
+      <button class="secondary" type="submit">Filtrar</button>
+    </form>
 
-    <a href="{% url 'community:create' %}">Nova publicação</a>
-    
-    <form method="get">
-    <label for="search">Buscar</label>
-    <input id="search" type="search" name="q" value="{{ search_term }}">
-
-    <label for="category">Categoria</label>
-    <select id="category" name="category">
-        <option value="">Todas</option>
-        {% for code, label in categories %}
-            <option value="{{ code }}" {% if code == selected_category %}selected{% endif %}>
-                {{ label }}
-            </option>
-        {% endfor %}
-    </select>
-
-    <button type="submit">Filtrar</button>
-    <a href="{% url 'community:feed' %}">Limpar</a>
-</form>
-
+    <h2 class="feed-heading">Publicações</h2>
     {% for post in posts %}
-        <article>
-            <h2><a href="{% url 'community:detail' post.pk %}">{{ post.title }}</a></h2>
-            <p>{{ post.get_category_display }} · {{ post.author.username }}</p>
-            <p>{{ post.content|truncatewords:25 }}</p>
-        </article>
+      <article class="post-card">
+        <div class="byline">
+          <span class="avatar" aria-hidden="true">{{ post.author.username|slice:":1"|upper }}</span>
+          <div><strong>{{ post.author.username }}</strong><br><time datetime="{{ post.created_at|date:'c' }}">{{ post.created_at|date:"d/m/Y · H:i" }}</time></div>
+        </div>
+        <div class="tags">
+          <span>{{ post.get_category_display }}</span>
+          {% if post.subject %}<span>{{ post.get_subject_display }}</span>{% endif %}
+          {% if post.is_resolved %}<span>Resolvida</span>{% endif %}
+        </div>
+        <h3><a href="{% url 'community:detail' post.pk %}">{{ post.title }}</a></h3>
+        <p>{{ post.content|truncatewords:35 }}</p>
+        <a class="post-link" href="{% url 'community:detail' post.pk %}">Ver publicação · {{ post.answer_count }} resposta{{ post.answer_count|pluralize }}</a>
+      </article>
     {% empty %}
-        <p>Ainda não há publicações.</p>
+      <section class="post-card"><h3>Ainda não há publicações.</h3><p>Experimente outros filtros ou inicie uma conversa com seus colegas.</p></section>
     {% endfor %}
 
-    {% if page_obj.has_previous %}
-    <a href="?q={{ search_term|urlencode }}&amp;category={{ selected_category|urlencode }}&amp;page={{ page_obj.previous_page_number }}">
-        Anterior
-    </a>
-{% endif %}
-{% if page_obj.has_next %}
-    <a href="?q={{ search_term|urlencode }}&amp;category={{ selected_category|urlencode }}&amp;page={{ page_obj.next_page_number }}">
-        Próxima
-    </a>
-{% endif %}
+    {% if page_obj.has_other_pages %}
+      <nav class="pagination" aria-label="Páginas do mural">
+        {% if page_obj.has_previous %}<a class="secondary" href="?subject={{ selected_subject|urlencode }}&amp;q={{ search_term|urlencode }}&amp;category={{ selected_category|urlencode }}&amp;page={{ page_obj.previous_page_number }}">Anterior</a>{% endif %}
+        <span>{{ page_obj.number }} de {{ paginator.num_pages }}</span>
+        {% if page_obj.has_next %}<a class="secondary" href="?subject={{ selected_subject|urlencode }}&amp;q={{ search_term|urlencode }}&amp;category={{ selected_category|urlencode }}&amp;page={{ page_obj.next_page_number }}">Próxima</a>{% endif %}
+      </nav>
+    {% endif %}
+  </main>
+</div>
 {% endblock %}
