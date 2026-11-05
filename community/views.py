@@ -1,14 +1,45 @@
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse, reverse_lazy
-from django.views.generic import CreateView, DeleteView, DetailView, ListView, UpdateView
+from django.views.generic import CreateView, DeleteView, ListView, UpdateView
 
-from .forms import PostForm
+from .forms import AnswerForm, PostForm
 from .models import Post
 
-class PostDetailView(LoginRequiredMixin, DetailView):
+
+class FeedView(LoginRequiredMixin, ListView):
     model = Post
-    template_name = "community/post_detail.html"
-    context_object_name = "post"
+    template_name = "community/feed.html"
+    context_object_name = "posts"
+    paginate_by = 10
+
+
+@login_required
+def post_detail(request, pk):
+    post = get_object_or_404(Post, pk=pk)
+
+    if request.method == "POST":
+        form = AnswerForm(request.POST)
+
+        if form.is_valid():
+            answer = form.save(commit=False)
+            answer.post = post
+            answer.author = request.user
+            answer.save()
+            return redirect("community:detail", pk=post.pk)
+    else:
+        form = AnswerForm()
+
+    return render(
+        request,
+        "community/post_detail.html",
+        {
+            "post": post,
+            "answers": post.answers.select_related("author"),
+            "answer_form": form,
+        },
+    )
 
 
 class PostCreateView(LoginRequiredMixin, CreateView):
@@ -23,9 +54,10 @@ class PostCreateView(LoginRequiredMixin, CreateView):
     def get_success_url(self):
         return reverse("community:detail", kwargs={"pk": self.object.pk})
 
-    class OwnerRequiredMixin(LoginRequiredMixin, UserPassesTestMixin):
-        def test_func(self):
-         return self.get_object().author_id == self.request.user.pk
+
+class OwnerRequiredMixin(LoginRequiredMixin, UserPassesTestMixin):
+    def test_func(self):
+        return self.get_object().author_id == self.request.user.pk
 
 
 class PostUpdateView(OwnerRequiredMixin, UpdateView):

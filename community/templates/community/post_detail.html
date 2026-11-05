@@ -12,4 +12,24 @@
     <a href="{% url 'community:edit' post.pk %}">Editar</a>
     <a href="{% url 'community:delete' post.pk %}">Excluir</a>
 {% endif %}
+
+<h2>Respostas</h2>
+
+{% for answer in answers %}
+    <article>
+        <strong>{{ answer.author.username }}</strong>
+        {{ answer.content|linebreaks }}
+    </article>
+{% empty %}
+    <p>Ainda não há respostas.</p>
+{% endfor %}
+
+<h2>Responder</h2>
+
+<form method="post">
+    {% csrf_token %}
+    {{ answer_form.as_p }}
+    <button type="submit">Enviar resposta</button>
+</form>
+
 {% endblock %}

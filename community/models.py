@@ -30,3 +30,24 @@ class Post(models.Model):
 
     def __str__(self):
         return self.title
+
+class Answer(models.Model):
+    post = models.ForeignKey(
+        Post,
+        on_delete=models.CASCADE,
+        related_name="answers",
+    )
+    author = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="taregran_answers",
+    )
+    content = models.TextField("Resposta")
+    is_solution = models.BooleanField("Melhor resposta", default=False)
+    created_at = models.DateTimeField("Respondida em", auto_now_add=True)
+
+    class Meta:
+        ordering = ["created_at"]
+
+    def __str__(self):
+        return f"Resposta de {self.author} para {self.post}"
