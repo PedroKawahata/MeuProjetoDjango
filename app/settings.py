@@ -139,5 +139,5 @@ JAZZMIN_SETTINGS = {
 }
 
 LOGIN_URL = "accounts:login"
-LOGIN_REDIRECT_URL = "courses:course_list"
+LOGIN_REDIRECT_URL = "community:feed"
 LOGOUT_REDIRECT_URL = "accounts:login"

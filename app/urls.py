@@ -26,8 +26,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('courses/', include('courses.urls')),
     path('contas/', include('accounts.urls')),
-    path("",RedirectView.as_view( pattern_name="courses:course_list",permanent=False,),),
-    path("comunidade/", include("community.urls")),
+    path("", include("community.urls")),
 ]
 
 urlpatterns += static(
