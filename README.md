@@ -1,4 +1,8 @@
-Taregran
+
+                    # Taregran
+
+![Logo do Taregran](docs/imagens/logo.png)
+
 O Taregran é uma aplicação acadêmica desenvolvida com Django para aproximar estudantes. Os usuários podem publicar dúvidas, atividades, conteúdos e materiais de estudo, responder às publicações de colegas e marcar uma resposta como solução.
 Funcionalidades
 - Cadastro, login e logout de alunos.
@@ -17,6 +21,17 @@ Tecnologias
 - SQLite para desenvolvimento.
 - Bootstrap 5 e CSS próprio para a interface.
 Como executar no Windows
+
+## Telas do Taregran
+
+### Mural de publicações
+
+![Mural do Taregran com busca e filtro por categoria](docs/imagens/mural.png)
+
+### Publicação com resposta marcada como solução
+
+![Página de uma publicação com a resposta escolhida pelo autor](docs/imagens/login.png)
+
 Abra o terminal na pasta do projeto e execute:
 # 1. Criar o ambiente virtual
 py -m venv .venv
