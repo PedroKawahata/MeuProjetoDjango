@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{% block title %}Excluir curso{% endblock %}
+
+{% block content %}
+    <h1>Excluir {{ course }}?</h1>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">Excluir</button>
+    </form>
+{% endblock %}

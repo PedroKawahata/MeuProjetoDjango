@@ -20,10 +20,13 @@ from django.contrib import admin
 from django.conf.urls.static import static
 from django.conf import settings
 from django.urls import path, include
+from django.views.generic import RedirectView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('courses.urls')),
+    path('courses/', include('courses.urls')),
+    path('contas/', include('accounts.urls')),
+    path("",RedirectView.as_view( pattern_name="courses:course_list",permanent=False,),),
 ]
 
 urlpatterns += static(

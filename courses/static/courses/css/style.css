@@ -4,3 +4,7 @@ body {
     margin: 40px auto;
     padding: 0 16px;
 }
+
+main h1 {
+    margin-bottom: 24px;
+}

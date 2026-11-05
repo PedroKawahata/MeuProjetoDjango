@@ -47,11 +47,3 @@ class Course(models.Model):
 
     def __str__(self):
         return self.name
-
-material = models.FileField(
-    upload_to="courses/materials/",
-)
-
-image = models.ImageField(
-    upload_to="courses/images/",
-)

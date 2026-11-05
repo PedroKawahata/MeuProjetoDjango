@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block title %}Cursos{% endblock %}
+
+{% block content %}
+    <h1>Cursos</h1>
+    <span>Olá, {{ user.username }}</span>
+    <form method="post" action="{% url 'accounts:logout' %}">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-sm btn-outline-secondary">Sair</button>
+    </form>
+    {# troque courses pelo nome do seu app #}
+    {% if perms.courses.add_course %}
+        <a href="{% url 'courses:course_create' %}" class="btn btn-warning">Novo curso</a>
+    {% endif %}
+
+    <ul>
+        {% for course in courses %}
+            <li>
+                {{ course.name }}
+                {% if perms.courses.view_course %}
+                    <a href="{% url 'courses:course_detail' course.pk %}" class="btn btn-sm btn-secondary">Ver</a>
+                {% endif %}
+                {% if perms.courses.change_course %}
+                    <a href="{% url 'courses:course_update' course.pk %}" class="btn btn-sm btn-primary">Editar</a>
+                {% endif %}
+                {% if perms.courses.delete_course %}
+                    <a href="{% url 'courses:course_delete' course.pk %}" class="btn btn-sm btn-danger">Excluir</a>
+                {% endif %}
+            </li>
+        {% empty %}
+            <li>Nenhum curso cadastrado.</li>
+        {% endfor %}
+    </ul>
+
+    {% if is_paginated %}
+        <nav class="d-flex align-items-center gap-2">
+            {% if page_obj.has_previous %}
+                <a href="{% querystring page=page_obj.previous_page_number %}" class="btn btn-sm btn-outline-primary">Anterior</a>
+            {% endif %}
+            <span class="text-muted small">Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}</span>
+            {% if page_obj.has_next %}
+                <a href="{% querystring page=page_obj.next_page_number %}" class="btn btn-sm btn-outline-primary">Próxima</a>
+            {% endif %}
+        </nav>
+    {% endif %}
+{% endblock %}
