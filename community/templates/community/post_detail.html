@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block title %}{{ post.title }}{% endblock %}
+
+{% block content %}
+    <a href="{% url 'community:feed' %}">Voltar ao mural</a>
+    <h1>{{ post.title }}</h1>
+
+    {% if post.is_resolved %}
+    <p>Resolvida</p>
+{% else %}
+    <p>Em aberto</p>
+{% endif %}
+
+    <p>{{ post.get_category_display }} · {{ post.author.username }}</p>
+    {{ post.content|linebreaks }}
+
+    {% if post.author == user %}
+    <a href="{% url 'community:edit' post.pk %}">Editar</a>
+    <a href="{% url 'community:delete' post.pk %}">Excluir</a>
+{% endif %}
+
+<h2>Respostas</h2>
+
+{% for answer in answers %}
+    <article>
+        <strong>{{ answer.author.username }}</strong>
+        {{ answer.content|linebreaks }}
+
+        {% if answer.is_solution %}
+    <strong>Melhor resposta</strong>
+{% elif post.author == user %}
+    <form method="post" action="{% url 'community:mark_solution' answer.pk %}">
+        {% csrf_token %}
+        <button type="submit">Marcar como melhor resposta</button>
+    </form>
+{% endif %}
+
+    </article>
+{% empty %}
+    <p>Ainda não há respostas.</p>
+{% endfor %}
+
+<h2>Responder</h2>
+
+<form method="post">
+    {% csrf_token %}
+    {{ answer_form.as_p }}
+    <button type="submit">Enviar resposta</button>
+</form>
+
+{% endblock %}

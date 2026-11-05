@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block title %}Mural do Taregran{% endblock %}
+
+{% block content %}
+    <h1>Mural do Taregran</h1>
+
+    <a href="{% url 'community:create' %}">Nova publicação</a>
+    
+    <form method="get">
+    <label for="search">Buscar</label>
+    <input id="search" type="search" name="q" value="{{ search_term }}">
+
+    <label for="category">Categoria</label>
+    <select id="category" name="category">
+        <option value="">Todas</option>
+        {% for code, label in categories %}
+            <option value="{{ code }}" {% if code == selected_category %}selected{% endif %}>
+                {{ label }}
+            </option>
+        {% endfor %}
+    </select>
+
+    <button type="submit">Filtrar</button>
+    <a href="{% url 'community:feed' %}">Limpar</a>
+</form>
+
+    {% for post in posts %}
+        <article>
+            <h2><a href="{% url 'community:detail' post.pk %}">{{ post.title }}</a></h2>
+            <p>{{ post.get_category_display }} · {{ post.author.username }}</p>
+            <p>{{ post.content|truncatewords:25 }}</p>
+        </article>
+    {% empty %}
+        <p>Ainda não há publicações.</p>
+    {% endfor %}
+
+    {% if page_obj.has_previous %}
+    <a href="?q={{ search_term|urlencode }}&amp;category={{ selected_category|urlencode }}&amp;page={{ page_obj.previous_page_number }}">
+        Anterior
+    </a>
+{% endif %}
+{% if page_obj.has_next %}
+    <a href="?q={{ search_term|urlencode }}&amp;category={{ selected_category|urlencode }}&amp;page={{ page_obj.next_page_number }}">
+        Próxima
+    </a>
+{% endif %}
+{% endblock %}
